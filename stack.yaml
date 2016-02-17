@@ -1,9 +1,18 @@
-resolver: lts-4.1
+resolver: lts-5.3
 packages:
 - '../lambdacube-ir/lambdacube-ir.haskell'
 - '.'
 extra-deps:
 - megaparsec-4.3.0
 - pretty-compact-1.0
+- vect-0.4.7
+- QuickCheck-2.8.2
+- aeson-0.10.0.0
+- async-2.0.2
+- base-orphans-0.5.1
+- indentation-0.2.1.1
+- pretty-compact-1.0
+- text-1.2.2.0
+
 flags: {}
 extra-package-dbs: []

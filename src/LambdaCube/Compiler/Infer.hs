@@ -532,7 +532,13 @@ cstr = f []
     f [] TType (UTFun "'FragOps" (Pi _ t _) [a]) (TyConN "'FragmentOperation" [x]) = f [] t a (cons x nil)
     f [] TType (UTFun "'FragOps" (Pi _ t _) [a]) (TyConN "'Tuple2" [TyConN "'FragmentOperation" [x], TyConN "'FragmentOperation" [y]]) = f [] t a $ cons x $ cons y nil
 
-    f ns@[] TType (TyConN "'Tuple2" [x, y]) (UFunN "'JoinTupleType" [x', y']) = t2 (f ns TType x x') (f ns TType y y')
+    f ns@[] TType (TyConN "'Tuple2" [x, y]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType y b)
+    f ns@[] TType (TyConN "'Tuple3" [x, y, z]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (tCon "'Tuple2" 0 (TType :~> TType :~> TType) [y, z]) b)
+    f ns@[] TType (TyConN "'Tuple4" [x, y, z, w]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (tCon "'Tuple3" 0 (TType :~> TType :~> TType :~> TType) [y, z, w]) b)
+    f ns@[] TType (TyConN "'Tuple5" [x, y, z, w, k]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (tCon "'Tuple4" 0 (TType :~> TType :~> TType :~> TType :~> TType) [y, z, w, k]) b)
+    f ns@[] TType (TyConN "'Tuple6" [x, y, z, w, k, m]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (tCon "'Tuple5" 0 (TType :~> TType :~> TType :~> TType :~> TType :~> TType) [y, z, w, k, m]) b)
+    f ns@[] TType (TyConN "'Tuple7" [x, y, z, w, k, m, n]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (tCon "'Tuple6" 0 (TType :~> TType :~> TType :~> TType :~> TType :~> TType :~> TType) [y, z, w, k, m, n]) b)
+
     f ns@[] TType (UFunN "'JoinTupleType" [x', y']) (TyConN "'Tuple2" [x, y]) = t2 (f ns TType x' x) (f ns TType y' y)
     f ns@[] TType (UFunN "'JoinTupleType" [x', y']) x@NoTup  = t2 (f ns TType x' x) (f ns TType y' TTuple0)
 
