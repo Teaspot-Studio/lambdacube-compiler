@@ -167,7 +167,12 @@ pattern TOrdering   <- TTyCon0 "'Ordering"  where TOrdering = tTyCon0 "'Ordering
 pattern TOutput     <- TTyCon0 "'Output"    where TOutput = tTyCon0 "'Output" $ error "cs 9"
 pattern TTuple0     <- TTyCon0 "'Tuple0"    where TTuple0 = tTyCon0 "'Tuple0" $ error "cs 10"
 pattern TVec a b    <- TyConN "'VecS" {-(TType :~> TNat :~> TType)-} [b, a]
---pattern TTuple2 a b = TTyCon "'Tuple2" (TType :~> TType :~> TType) [a, b]
+pattern TTuple2 a b <- TTyCon "'Tuple2" (TType :~> TType :~> TType) [a, b] where TTuple2 a b = tTyCon "'Tuple2" (TType :~> TType :~> TType) [a, b] $ error "cs 11"
+pattern TTuple3 a b c <- TTyCon "'Tuple3" (TType :~> TType :~> TType :~> TType) [a, b, c] where TTuple3 a b c = tTyCon "'Tuple3" (TType :~> TType :~> TType :~> TType) [a, b, c] $ error "cs 12"
+pattern TTuple4 a b c d <- TTyCon "'Tuple4" (TType :~> TType :~> TType :~> TType :~> TType) [a, b, c, d] where TTuple4 a b c d = tTyCon "'Tuple4" (TType :~> TType :~> TType :~> TType :~> TType) [a, b, c, d] $ error "cs 13"
+pattern TTuple5 a b c d e <- TTyCon "'Tuple5" (TType :~> TType :~> TType :~> TType :~> TType :~> TType) [a, b, c, d, e] where TTuple5 a b c d e = tTyCon "'Tuple5" (TType :~> TType :~> TType :~> TType :~> TType :~> TType) [a, b, c, d, e] $ error "cs 14"
+pattern TTuple6 a b c d e f <- TTyCon "'Tuple6" (TType :~> TType :~> TType :~> TType :~> TType :~> TType :~> TType) [a, b, c, d, e, f] where TTuple6 a b c d e f = tTyCon "'Tuple6" (TType :~> TType :~> TType :~> TType :~> TType :~> TType :~> TType) [a, b, c, d, e, f] $ error "cs 15"
+pattern TTuple7 a b c d e f g <- TTyCon "'Tuple7" (TType :~> TType :~> TType :~> TType :~> TType :~> TType :~> TType :~> TType) [a, b, c, d, e, f, g] where TTuple7 a b c d e f g = tTyCon "'Tuple7" (TType :~> TType :~> TType :~> TType :~> TType :~> TType :~> TType :~> TType) [a, b, c, d, e, f, g] $ error "cs 16"
 pattern TInterpolated a <- TyConN "'Interpolated" [a] 
 tFloating t = error "tFloating" --TFun "'Floating" (TType :~> TType) [t]
 tInterpolated x = tTyCon "'Interpolated" (TType :~> TType) [x] [Pi Hidden TType $ Pi Hidden (tFloating $ Var 0) $ tInterpolated $ Var 1, error "cs 12'", error "cs 12''"]
@@ -532,12 +537,12 @@ cstr = f []
     f [] TType (UTFun "'FragOps" (Pi _ t _) [a]) (TyConN "'FragmentOperation" [x]) = f [] t a (cons x nil)
     f [] TType (UTFun "'FragOps" (Pi _ t _) [a]) (TyConN "'Tuple2" [TyConN "'FragmentOperation" [x], TyConN "'FragmentOperation" [y]]) = f [] t a $ cons x $ cons y nil
 
-    f ns@[] TType (TyConN "'Tuple2" [x, y]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType y b)
-    f ns@[] TType (TyConN "'Tuple3" [x, y, z]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (tCon "'Tuple2" 0 (TType :~> TType :~> TType) [y, z]) b)
-    f ns@[] TType (TyConN "'Tuple4" [x, y, z, w]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (tCon "'Tuple3" 0 (TType :~> TType :~> TType :~> TType) [y, z, w]) b)
-    f ns@[] TType (TyConN "'Tuple5" [x, y, z, w, k]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (tCon "'Tuple4" 0 (TType :~> TType :~> TType :~> TType :~> TType) [y, z, w, k]) b)
-    f ns@[] TType (TyConN "'Tuple6" [x, y, z, w, k, m]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (tCon "'Tuple5" 0 (TType :~> TType :~> TType :~> TType :~> TType :~> TType) [y, z, w, k, m]) b)
-    f ns@[] TType (TyConN "'Tuple7" [x, y, z, w, k, m, n]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (tCon "'Tuple6" 0 (TType :~> TType :~> TType :~> TType :~> TType :~> TType :~> TType) [y, z, w, k, m, n]) b)
+    f ns@[] TType (TyConN "'Tuple2" [x, y]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType y b) 
+    f ns@[] TType (TyConN "'Tuple3" [x, y, z]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (TTuple2 y z) b)
+    f ns@[] TType (TyConN "'Tuple4" [x, y, z, w]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (TTuple3 y z w) b)
+    f ns@[] TType (TyConN "'Tuple5" [x, y, z, w, k]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (TTuple4 y z w k) b)
+    f ns@[] TType (TyConN "'Tuple6" [x, y, z, w, k, m]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (TTuple5 y z w k m) b)
+    f ns@[] TType (TyConN "'Tuple7" [x, y, z, w, k, m, n]) (UFunN "'JoinTupleType" [a, b]) = t2 (f ns TType x a) (f ns TType (TTuple6 y z w k m n) b)
 
     f ns@[] TType (UFunN "'JoinTupleType" [x', y']) (TyConN "'Tuple2" [x, y]) = t2 (f ns TType x' x) (f ns TType y' y)
     f ns@[] TType (UFunN "'JoinTupleType" [x', y']) x@NoTup  = t2 (f ns TType x' x) (f ns TType y' TTuple0)
