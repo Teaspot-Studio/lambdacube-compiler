@@ -30,7 +30,7 @@ data Tuple3 a b c = Tuple3 a b c
 data Tuple4 a b c d = Tuple4 a b c d
 data Tuple5 a b c d e = Tuple5 a b c d e
 data Tuple6 a b c d e f = Tuple6 a b c d e f
-data Tuple7 a b c d e f g = Tuple6 a b c d e f g
+data Tuple7 a b c d e f g = Tuple7 a b c d e f g
 
 -- ... TODO
 
